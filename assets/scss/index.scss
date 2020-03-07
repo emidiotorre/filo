@@ -1,0 +1,39 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+.tooltip {
+  //position: fixed;
+  visibility: hidden;
+  background: #333;
+  color: white;
+  font-weight: bold;
+  padding: 4px 8px;
+  font-size: 13px;
+  border-radius: 4px;
+}
+
+.box {
+  border: 1px dashed rgba(0, 0, 0, 0.5);
+  padding: 5px;
+  margin: 25px;
+  &.selected {
+    background-color: yellow;
+  }
+}
+
+#text {
+  grid-column: 1;
+  padding: 50px;
+}
+
+#boxes {
+  grid-column: 2;
+  padding: 50px;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+#grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}

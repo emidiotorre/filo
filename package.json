@@ -1,0 +1,19 @@
+{
+  "name": "filo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "watch": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@popperjs/core": "^2.1.0",
+    "parcel": "^1.12.4"
+  },
+  "devDependencies": {
+    "sass": "^1.26.2"
+  }
+}
