@@ -23,8 +23,9 @@ body {
 }
 
 #text {
-  grid-column: 1;
+  grid-column: span 2;
   padding: 50px;
+  line-height: 1.5em;
 }
 
 #boxes {

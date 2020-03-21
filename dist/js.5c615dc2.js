@@ -2750,9 +2750,9 @@ function generateGetBoundingClientRect() {
 
 function init() {
   var text_tooltip = document.querySelector("#text_tooltip");
-  var box_tooltip = document.querySelector("#box_tooltip");
   var selectedBoxes = [];
   var groups = [];
+  var currentSelectedElement = null;
 
   var virtualElement = function virtualElement(e) {
     return {
@@ -2762,39 +2762,71 @@ function init() {
 
   document.getElementById("text").addEventListener("contextmenu", function (e) {
     e.preventDefault();
+    currentSelectedElement = e.target;
     text_tooltip.style.visibility = "visible";
     (0, _core.createPopper)(virtualElement(e), text_tooltip, {
       placement: "right-start"
     });
     return false;
   }, false);
-  document.getElementById("boxes").addEventListener("contextmenu", function (e) {
-    box_tooltip.style.visibility = "visible";
-    e.preventDefault();
-    (0, _core.createPopper)(virtualElement(e), box_tooltip, {
-      placement: "right-start"
-    });
-    return false;
-  }, false);
-  var boxes = document.getElementById("boxes");
   var createBox = document.querySelectorAll(".create_box");
   var createGroup = document.querySelectorAll(".create_group");
+  var textContainer = document.querySelector("#text");
   createBox.forEach(function (button) {
     button.addEventListener("click", function (e) {
+      var text = currentSelectedElement.innerHTML;
       e.stopImmediatePropagation();
-      var selection = window.getSelection();
+      var selection = String(window.getSelection());
 
       if (selection != "") {
-        var newBox = document.createElement("DIV");
-        newBox.classList.add("box");
-        newBox.innerHTML = selection;
-        boxes.appendChild(newBox);
+        var primaedopo = text.split(selection);
+        currentSelectedElement.innerHTML = "";
+        var parent = currentSelectedElement.parentElement;
+        var boxes = [primaedopo[0], selection, primaedopo[1]].map(box);
+        console.log(boxes);
+
+        if (currentSelectedElement.id != "text") {
+          currentSelectedElement.remove();
+          insertBoxes(parent, boxes);
+        } else {
+          insertBoxes(currentSelectedElement, boxes, "afterbegin");
+        }
       }
 
-      box_tooltip.style.visibility = "hidden";
       text_tooltip.style.visibility = "hidden";
     });
   });
+
+  function box(text) {
+    var newBox = document.createElement("DIV");
+    newBox.classList.add("box");
+    newBox.innerHTML = text;
+    return newBox;
+  }
+
+  function insertBoxes(element, boxes, position) {
+    boxes.forEach(function (box) {
+      insertBox(element, box, position);
+    });
+  }
+
+  function insertBox(element, box) {
+    var position = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "afterend";
+
+    if (box.innerHTML != "") {
+      element.insertAdjacentElement(position, box);
+    } else {
+      box.remove();
+    }
+  }
+
+  function boxSpecial(text) {
+    var newBox = document.createElement("DIV");
+    newBox.classList.add("box");
+    newBox.classList.add("special");
+    newBox.innerHTML = text;
+    return newBox;
+  }
 
   function deselectBoxes() {
     document.querySelectorAll(".box.selected").forEach(function (box) {
@@ -2803,23 +2835,6 @@ function init() {
     selectedBoxes = [];
   }
 
-  boxes.addEventListener("click", function (e) {
-    e.stopPropagation();
-    var target = e.target;
-
-    if (target.classList.contains("selected")) {
-      target.classList.remove("selected");
-      selectedBoxes.splice(selectedBoxes.indexOf(target), 1);
-    } else {
-      target.classList.add("selected");
-      selectedBoxes.push(target);
-    }
-
-    var groupList = document.querySelector("#group_list");
-    groupList.innerHTML = extractGroupNames(groups);
-    box_tooltip.style.visibility = "hidden";
-    text_tooltip.style.visibility = "hidden";
-  });
   createGroup.forEach(function (button) {
     button.addEventListener("click", function (e) {
       groups.push({
@@ -2831,7 +2846,6 @@ function init() {
       });
       deselectBoxes();
       console.table(groups);
-      box_tooltip.style.visibility = "hidden";
       text_tooltip.style.visibility = "hidden";
     });
   });
@@ -2890,7 +2904,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "37883" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "35363" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
